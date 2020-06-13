@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="emptype" format="xml">
+      <types:example format="xml" element="people" location="examples/emp.xml"/>
+    </types:type>
+    <types:type name="empcsv" format="csv">
+      <types:shape format="weave"><![CDATA[%dw 2.0
+
+type empcsv = Array<{|  eid: Number,   ename: String,   eage: Number,   egender: String|}> {"isQuotedString": "false",
+"header": "true",
+"headerLineNumber": "0"}
+
+]]></types:shape>
+      <types:properties>
+        <types:property name="headerLineNumber" value="0"/>
+        <types:property name="header" value="true"/>
+        <types:property name="isQuotedString" value="false"/>
+      </types:properties>
+    </types:type>
+    <types:type name="empjson" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#820a30a6-27d7-4c05-91b6-0ce30ed7b0f3">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="emptype"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="empcsv"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="65130a27-0e24-4a55-8d9d-9d7082db5ad3" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="testjsonFlow" doc:id="de39d0f6-d4dc-4354-b655-dfe46540d19e" >
+		<http:listener doc:name="Listener" doc:id="437c7931-6bc3-4502-a8fe-68e85e3f81d2" config-ref="HTTP_Listener_config" path="testjson" allowedMethods="GET,POST" outputMimeType="text/json"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="f583ecd2-0d62-4a45-94f3-8199c882392b" />
+		<ee:transform doc:name="Transform Message" doc:id="820a30a6-27d7-4c05-91b6-0ce30ed7b0f3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="aeea0952-69b3-4843-8a43-8434aab830a9" message='#[payload]'/>
+	</flow>
+</mule>
